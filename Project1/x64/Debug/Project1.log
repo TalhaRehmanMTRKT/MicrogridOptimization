@@ -1,0 +1,4 @@
+﻿  Source.cpp
+D:\MasterWork\Codes\MicrogridOptimization\Project1\Source.cpp(33,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\Project1\Source.cpp(35,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Project1.vcxproj -> D:\MasterWork\Codes\MicrogridOptimization\Project1\x64\Debug\Project1.exe
