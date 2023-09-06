@@ -182,11 +182,11 @@ IloExpr objective(env, T);
 
     if (outputFile.is_open()) {
         // Write the header row
-        outputFile << "Time,Pload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,Rdg2,PGbuy,PGsell,statoc,Bchg,Bdischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGbuy,HGsell" << std::endl;
+        outputFile << "Time,Pload,Hload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,Rdg2,PGbuy,PGsell,statoc,Bchg,Bdischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGbuy,HGsell" << std::endl;
 
         // Write the data rows
         for (int i = 0; i < T; i++) {
-            outputFile << i + 1 << "," << Pload[i] << "," << CGbuy[i] << ","
+            outputFile << i + 1 << "," << Pload[i] <<","<<Hload[i] << "," << CGbuy[i] << ","
                 << CGsell[i] << "," << CHsell[i] << ","
                 << CHbuy[i] << "," << Rdg1[i] << "," << Rdg2[i] << ","
                 << cplex.getValue(PGbuy[i]) << "," << cplex.getValue(PGsell[i]) << ","
