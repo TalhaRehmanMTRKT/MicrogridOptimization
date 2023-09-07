@@ -18,8 +18,8 @@ main(int, char**)
 
 // Some Constants 
 int T = 24; //One day
-int Cdg1 = 80; //Cost for generating per kW power from dg
-int Cdg2 = 90; //Cost for generating per kW power from dg
+int Cdg1 = 135; //Cost for generating per kW power from dg
+int Cdg2 = 140; //Cost for generating per kW power from dg
 int Chob = 80;
 int Cchp1 = 150;
 int Cchp2 = 145;
@@ -189,14 +189,14 @@ IloExpr objective(env, T);
             outputFile << i + 1 << "," << Pload[i] <<","<<Hload[i] << "," << CGbuy[i] << ","
                 << CGsell[i] << "," << CHsell[i] << ","
                 << CHbuy[i] << "," << Rdg1[i] << "," << Rdg2[i] << ","
-                << cplex.getValue(PGbuy[i]) << "," << cplex.getValue(PGsell[i]) << ","
-                << cplex.getValue(statoc[i]) << "," << cplex.getValue(Bchg[i]) << ","
+                << cplex.getValue(PGbuy[i]) << "," << -cplex.getValue(PGsell[i]) << ","
+                << cplex.getValue(statoc[i]) << "," << -cplex.getValue(Bchg[i]) << ","
                 << cplex.getValue(Bdischg[i]) << "," << cplex.getValue(Pdg1[i]) << ","
                 << cplex.getValue(Pdg2[i]) << ","
                 << cplex.getValue(Pchp1[i]) << "," << cplex.getValue(Pchp2[i]) << ","
                 << cplex.getValue(Hhob[i]) << "," << cplex.getValue(Hchp1[i]) << ","
                 << cplex.getValue(Hchp2[i]) << "," << cplex.getValue(HGbuy[i]) << ","
-                << cplex.getValue(HGsell[i]) << std::endl;
+                << -cplex.getValue(HGsell[i]) << std::endl;
         }
 
         // Close the CSV file
