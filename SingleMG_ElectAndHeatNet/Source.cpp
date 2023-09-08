@@ -18,8 +18,8 @@ main(int, char**)
 
 // Some Constants 
 int T = 24; //One day
-int Cdg1 = 135; //Cost for generating per kW power from dg
-int Cdg2 = 140; //Cost for generating per kW power from dg
+int Cdg1 = 100; //Cost for generating per kW power from dg
+int Cdg2 = 100; //Cost for generating per kW power from dg
 int Chob = 80;
 int Cchp1 = 150;
 int Cchp2 = 145;
@@ -30,7 +30,7 @@ float k1 = 1.2; //heat to electric ratio chp1
 float k2 = 0.8; //heat to electric ratio chp2
 
 // Electric and Heat Demand 
-int* Pload = new int[T] {169, 175, 179, 171, 181, 172, 270, 264, 273, 281, 193, 158, 161, 162, 250, 260, 267, 271, 284, 167, 128, 134, 144, 150};  //Electicity demand w.r.t tim
+int* Pload = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
 int* Hload = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
 
 
@@ -176,7 +176,6 @@ IloExpr objective(env, T);
 
 #pragma region StoringOutput
 
-    // Create and open the CSV file for writing
     // Create and open the CSV file for writing
     std::ofstream outputFile("output.csv");
 
