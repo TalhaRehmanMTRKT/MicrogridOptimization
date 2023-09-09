@@ -1,0 +1,15 @@
+﻿  Source.cpp
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(28,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(32,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(33,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(34,15): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(35,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(36,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(43,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(43,43): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(43,48): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(43,53): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(43,58): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(44,35): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\Source.cpp(44,47): warning C4305: 'initializing': truncation from 'double' to 'float'
+  SingleMG_ElecHeatCoolNetAndEV.vcxproj -> D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElecHeatCoolNetAndEV\x64\Debug\SingleMG_ElectHeatNetAndEv.exe
