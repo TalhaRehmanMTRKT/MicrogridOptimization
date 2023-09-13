@@ -2,6 +2,7 @@
 #include<chrono>
 #include <iostream>
 #include <fstream>
+#include <map>
 ILOSTLBEGIN
 
 
@@ -18,23 +19,31 @@ main(int, char**)
 
 #pragma region Microgrid Input Data
 
-// Some Constants 
+// Some Constants
+ 
+
 int T = 24; //One day
-int Cdg1 = 135; //Cost for generating per kW power from dg
-int Cdg2 = 140; //Cost for generating per kW power from dg
-int Chob = 80;
-int Cchp1 = 150;
-int Cchp2 = 145;
-float socini = 0.2; //Initially charged battery
-int Pbmax = 150; //battery maximum capacity
-float effin = 0.95; //battery effciency
-float Eveffin = 0.90; //battery effciency
-float k1 = 1.2; //heat to electric ratio chp1
-float k2 = 0.8; //heat to electric ratio chp2
-float Heffin = 0.95; //battery effciency
-int Hssmax = 50; //battery maximum capacity
 int numEvs = 5; // Total Nmber of Electric vehicles
 
+map<std::string, int> int_constant = {
+        {"Cdg1", 135},
+        {"Cdg2", 140},
+        {"Chob", 80},
+        {"Cchp1", 150},
+        {"Cchp2", 145},
+        {"Pbmax", 150},
+        {"Hssmax", 50},
+};
+
+
+map<std::string, float> float_constant = {
+        {"socini", 0.2},
+        {"effin", 0.95},
+        {"Eveffin", 0.90},
+        {"k1", 1.2},
+        {"k2", 0.8},
+        {"Heffin", 0.95}
+};
 
 
 // Arrival and Departure time of Evs 
@@ -115,8 +124,7 @@ IloExpr objective(env, T);
  
     for (int t = 0; t < T; t++)
     {
-        objective +=  Cdg1 * Pdg1[t] + Cdg2 * Pdg2[t] + CGbuy[t] * PGbuy[t] - CGsell[t] * PGsell[t]  + CHbuy[t] * HGbuy[t] - CHsell[t] * HGsell[t] + Chob * Hhob[t] 
-            + Cchp1 * Pchp1[t] + Cchp2 * Pchp2[t];
+        objective += int_constant["Cdg1"] * Pdg1[t] + int_constant["Cdg2"] * Pdg2[t] + CGbuy[t] * PGbuy[t] - CGsell[t] * PGsell[t] + CHbuy[t] * HGbuy[t] - CHsell[t] * HGsell[t] + int_constant["Chob"] * Hhob[t] + int_constant["Cchp1"] * Pchp1[t] + int_constant["Cchp2"] * Pchp2[t];
     }
 
 
@@ -150,8 +158,8 @@ IloExpr objective(env, T);
         model.add(50 <= Pchp2[t]);
         model.add(Pchp2[t] <= 100);
 
-        model.add(Hchp1[t] == (k1) * Pchp1[t]);
-        model.add(Hchp2[t] == (k2) * Pchp2[t]);
+        model.add(Hchp1[t] == (float_constant["k1"]) * Pchp1[t]);
+        model.add(Hchp2[t] == (float_constant["k2"]) * Pchp2[t]);
 
         model.add(0 <= HSSsoc[t]);
         model.add(HSSsoc[t] <= 1);
@@ -166,20 +174,20 @@ IloExpr objective(env, T);
             // Ev battery Constraints
             if (t == ta[n])
             {
-                model.add(evsoc[n][t] == evsocini[n] + (Eveffin* Pevchg[n][t]  - Pevdischg[n][t]/Eveffin)/evcap[n]);
+                model.add(evsoc[n][t] == evsocini[n] + (float_constant["Eveffin"] * Pevchg[n][t]  - Pevdischg[n][t]/ float_constant["Eveffin"])/evcap[n]);
                 model.add(0 <= Pevchg[n][t]);
                 model.add(0 <= Pevdischg[n][t]);
-                model.add(Pevchg[n][t] <= (evcap[n] * (1 - evsocini[n]) / Eveffin));
-                model.add(Pevdischg[n][t] <= (evcap[n] * evsocini[n] * Eveffin));
+                model.add(Pevchg[n][t] <= (evcap[n] * (1 - evsocini[n]) / float_constant["Eveffin"]));
+                model.add(Pevdischg[n][t] <= (evcap[n] * evsocini[n] * float_constant["Eveffin"]));
             }
             else if (t > ta[n] && t <= td[n])
 
             {
-                model.add(evsoc[n][t] == evsoc[n][t - 1] + ((Eveffin * Pevchg[n][t] - (Pevdischg[n][t] / effin)) / evcap[n]));
+                model.add(evsoc[n][t] == evsoc[n][t - 1] + ((float_constant["Eveffin"] * Pevchg[n][t] - (Pevdischg[n][t] / float_constant["Eveffin"])) / evcap[n]));
                 model.add(0 <= Pevchg[n][t]);
                 model.add(0 <= Pevdischg[n][t]);
-                model.add(Pevchg[n][t] <= (evcap[n] * (1 - evsoc[n][t - 1])) / Eveffin);
-                model.add(Pevdischg[n][t] <= evcap[n] * evsoc[n][t - 1] * Eveffin);
+                model.add(Pevchg[n][t] <= (evcap[n] * (1 - evsoc[n][t - 1])) / float_constant["Eveffin"]);
+                model.add(Pevdischg[n][t] <= evcap[n] * evsoc[n][t - 1] * float_constant["Eveffin"]);
 
 
                 if (t == td[n]) { model.add(evsoc[n][t] >=  0.5 ); }
@@ -201,40 +209,38 @@ IloExpr objective(env, T);
         model.add(statoc[t] <= 1);
 
 
-
-
         if (t == 0)
         {
-            model.add(statoc[t] == socini + ((effin * Bchg[t] - (Bdischg[t] / effin)) / Pbmax));
+            model.add(statoc[t] == float_constant["socini"] + ((float_constant["effin"] * Bchg[t] - (Bdischg[t] / float_constant["effin"])) / int_constant["Pbmax"]));
             model.add(0 <= Bchg[t]);
             model.add(0 <= Bdischg[t]);
-            model.add(Bchg[t] <= (Pbmax * (1 - socini) / effin));
-            model.add(Bdischg[t] <= (Pbmax * socini * effin));
+            model.add(Bchg[t] <= (int_constant["Pbmax"] * (1 - float_constant["socini"]) / float_constant["effin"]));
+            model.add(Bdischg[t] <= (int_constant["Pbmax"] * float_constant["socini"] * float_constant["effin"]));
 
 
-            model.add(HSSsoc[t] == 0.5 + ((Heffin * Hchg[t] - (Hdischg[t] / Heffin)) / Hssmax));
+            model.add(HSSsoc[t] == 0.5 + ((float_constant["Heffin"] * Hchg[t] - (Hdischg[t] / float_constant["Heffin"])) / int_constant["Hssmax"]));
             model.add(0 <= Hchg[t]);
             model.add(0 <= Hdischg[t]);
             //model.add(0 == Hdischg[t] * Hchg[t]);
-            model.add(Hchg[t] <= (Hssmax * (1 - 0.5) / Heffin));
-            model.add(Hdischg[t] <= (Hssmax * 0.5 * Heffin));
+            model.add(Hchg[t] <= (int_constant["Hssmax"] * (1 - 0.5) / float_constant["Heffin"]));
+            model.add(Hdischg[t] <= (int_constant["Hssmax"] * 0.5 * float_constant["Heffin"]));
 
         }
         else
         {
-            model.add(statoc[t] == statoc[t - 1] + ((effin * Bchg[t] - (Bdischg[t] / effin)) / Pbmax));
+            model.add(statoc[t] == statoc[t - 1] + ((float_constant["effin"] * Bchg[t] - (Bdischg[t] / float_constant["effin"])) / int_constant["Pbmax"]));
             model.add(0 <= Bchg[t]);
             model.add(0 <= Bdischg[t]);
-            model.add(Bchg[t] <= (Pbmax * (1 - statoc[t - 1])) / effin);
-            model.add(Bdischg[t] <= Pbmax * statoc[t - 1] * effin);
+            model.add(Bchg[t] <= (int_constant["Pbmax"] * (1 - statoc[t - 1])) / float_constant["effin"]);
+            model.add(Bdischg[t] <= int_constant["Pbmax"] * statoc[t - 1] * float_constant["effin"]);
 
 
-            model.add(HSSsoc[t] == HSSsoc[t - 1] + ((Heffin * Hchg[t] - (Hdischg[t] / Heffin)) / Hssmax));
+            model.add(HSSsoc[t] == HSSsoc[t - 1] + ((float_constant["Heffin"] * Hchg[t] - (Hdischg[t] / float_constant["Heffin"])) / int_constant["Hssmax"]));
             model.add(0 <= Hchg[t]);
             model.add(0 <= Hdischg[t]);
             //model.add(0 == Hdischg[t] * Hchg[t]);
-            model.add(Hchg[t] <= (Hssmax * (1 - HSSsoc[t-1]) / Heffin));
-            model.add(Hdischg[t] <= (Hssmax * HSSsoc[t - 1] * Heffin));
+            model.add(Hchg[t] <= (int_constant["Hssmax"] * (1 - HSSsoc[t-1]) / float_constant["Heffin"]));
+            model.add(Hdischg[t] <= (int_constant["Hssmax"] * HSSsoc[t - 1] * float_constant["Heffin"]));
         }
 
 
@@ -288,9 +294,9 @@ IloExpr objective(env, T);
 
     if (outputFile.is_open()) {
         // Write the header row
-        outputFile << "Time,Pload,Hload,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,PGbuy,PGsell,statoc,Bchg,Bdischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGbuy,HGsell,Pec,Hac,Hchg,Hdischg" ;
+        outputFile << "Time,Pload+Pec,Hload+Hac,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,PGbuy/sell,statoc,Bchg/dischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGbuy/sell,Hchg/dischg" ;
         for (int mg = 0; mg < numEvs; mg++) {
-            outputFile << ",Pevchg" << mg + 1 << ",Pevdischg" << mg + 1;
+            outputFile << ",Pevchg/dischg" << mg + 1;
         }
 
         outputFile << std::endl;
@@ -298,20 +304,18 @@ IloExpr objective(env, T);
 
         // Write the data rows
         for (int i = 0; i < T; i++) {
-            outputFile << i + 1 << "," << Pload[i] <<","<<Hload[i] << "," << Cload[i] << "," << CGbuy[i] << ","
+            outputFile << i + 1 << "," << Pload[i] + cplex.getValue(Pec[i]) <<","<<Hload[i]+ cplex.getValue(Hac[i]) << "," << Cload[i] << "," << CGbuy[i] << ","
                 << CGsell[i] << "," << CHsell[i] << ","
                 << CHbuy[i] << "," << Rdg1[i] << ","
-                << cplex.getValue(PGbuy[i]) << "," << -cplex.getValue(PGsell[i]) << ","
-                << cplex.getValue(statoc[i]) << "," << -cplex.getValue(Bchg[i]) << ","
-                << cplex.getValue(Bdischg[i]) << "," << cplex.getValue(Pdg1[i]) << ","
+                << cplex.getValue(PGbuy[i]) - cplex.getValue(PGsell[i]) << ","
+                << cplex.getValue(statoc[i]) << "," << -cplex.getValue(Bchg[i]) + cplex.getValue(Bdischg[i]) << "," << cplex.getValue(Pdg1[i]) << ","
                 << cplex.getValue(Pdg2[i]) << ","
                 << cplex.getValue(Pchp1[i]) << "," << cplex.getValue(Pchp2[i]) << ","
                 << cplex.getValue(Hhob[i]) << "," << cplex.getValue(Hchp1[i]) << ","
-                << cplex.getValue(Hchp2[i]) << "," << cplex.getValue(HGbuy[i]) << ","
-                << -cplex.getValue(HGsell[i])<<","<< cplex.getValue(Pec[i]) << "," << cplex.getValue(Hac[i]) << "," << cplex.getValue(Hchg[i])<< "," << cplex.getValue(Hdischg[i]);
+                << cplex.getValue(Hchp2[i]) << "," << cplex.getValue(HGbuy[i])-cplex.getValue(HGsell[i]) << "," << -cplex.getValue(Hchg[i])+cplex.getValue(Hdischg[i]);
 
             for (int mg = 0; mg < numEvs; mg++) {
-                outputFile << "," << -cplex.getValue(Pevchg[mg][i]) << "," << cplex.getValue(Pevdischg[mg][i]);
+                outputFile << "," << -cplex.getValue(Pevchg[mg][i]) + cplex.getValue(Pevdischg[mg][i]);
             }
 
             outputFile << std::endl;
