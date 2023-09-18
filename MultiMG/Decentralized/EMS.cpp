@@ -7,7 +7,7 @@
 void EMS::MgOptimizationModel() {
 
 #pragma region Objective Function
-    IloExpr objective(env_, T_);
+    IloExpr objective(env_);
 
 
     for (int t = 0; t < T_; t++)
@@ -171,7 +171,7 @@ resi EMS::solve() {
     cplex.solve();
     obj = cplex.getObjValue();
     cout << "Solution status: " << cplex.getStatus() << endl;
-    cout << "Minimized Objective Funtion : " << obj << endl;
+    cout << "Minimized Objective Funtion of "<< name_ << " is :  " << obj << endl;
     
 
     int* pmgsur = new int[T_];

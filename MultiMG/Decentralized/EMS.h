@@ -31,8 +31,8 @@ public:
     IloNumVarArray HGsell;
   
 
-    EMS(int T, int numEvs, const std::map<std::string, int>& intConstants, const std::map<std::string, float>& floatConstants, int* ta, int* td, float* evsocini, float* evcap, int* Pload, int* Hload, int* Cload, int* CGbuy, int* CGsell, int* CHbuy, int* CHsell, float* Rdg1)
-        : T_(T), numEvs_(numEvs), intConstants_(intConstants), floatConstants_(floatConstants), ta_(ta), td_(td), evsocini_(evsocini), evcap_(evcap), Pload_(Pload), Hload_(Hload), Cload_(Cload), CGbuy_(CGbuy), CGsell_(CGsell), CHbuy_(CHbuy), CHsell_(CHsell), Rdg1_(Rdg1) {
+    EMS(string name,int T, int numEvs, const std::map<std::string, int>& intConstants, const std::map<std::string, float>& floatConstants, int* ta, int* td, float* evsocini, float* evcap, int* Pload, int* Hload, int* Cload, int* CGbuy, int* CGsell, int* CHbuy, int* CHsell, float* Rdg1)
+        :name_(name), T_(T), numEvs_(numEvs), intConstants_(intConstants), floatConstants_(floatConstants), ta_(ta), td_(td), evsocini_(evsocini), evcap_(evcap), Pload_(Pload), Hload_(Hload), Cload_(Cload), CGbuy_(CGbuy), CGsell_(CGsell), CHbuy_(CHbuy), CHsell_(CHsell), Rdg1_(Rdg1) {
 
         env_ = IloEnv();
         model_ = IloModel(env_);
@@ -48,6 +48,7 @@ public:
 private:
     IloEnv env_;
     IloModel model_;
+    string name_;
     int T_;
     int numEvs_;
     std::map<std::string, int> intConstants_;
