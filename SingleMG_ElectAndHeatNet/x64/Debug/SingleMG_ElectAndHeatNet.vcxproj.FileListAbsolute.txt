@@ -1,1 +1,0 @@
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\x64\Debug\SingleMG_ElectAndHeatNet.exe

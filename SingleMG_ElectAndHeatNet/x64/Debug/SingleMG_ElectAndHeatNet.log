@@ -1,7 +1,0 @@
-﻿  Source.cpp
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\Source.cpp(25,14): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\Source.cpp(27,13): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\Source.cpp(28,10): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\Source.cpp(29,10): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\Source.cpp(30,14): warning C4305: 'initializing': truncation from 'double' to 'float'
-  SingleMG_ElectAndHeatNet.vcxproj -> D:\MasterWork\Codes\MicrogridOptimization\SingleMG_ElectAndHeatNet\x64\Debug\SingleMG_ElectAndHeatNet.exe
