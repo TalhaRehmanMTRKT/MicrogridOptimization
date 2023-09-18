@@ -8,6 +8,13 @@ ILOSTLBEGIN
 
 
 typedef IloArray<IloNumVarArray> NumVar2D;
+void printIntArray(int* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
 
 int
 main(int, char**)
@@ -73,9 +80,12 @@ float* Rdg1 = new float[T] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10, 15, 20, 23, 2
 #pragma endregion
 
 
-EMS microgrid(T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
-microgrid.solve();
-
+EMS mg1(T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
+resi mg1Result = mg1.solve();
+printIntArray(mg1Result.pmgsur, T);
+//printIntArray(mg1Result.pmgshort, T);
+//printIntArray(mg1Result.Hmgsur, T);
+//printIntArray(mg1Result.Hmgshort, T);
 
 return 1;
 

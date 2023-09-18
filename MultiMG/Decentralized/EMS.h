@@ -9,11 +9,20 @@ using namespace std;
 typedef IloArray<IloNumVarArray> NumVar2D;
 
 
+struct resi {
+    int* pmgsur;
+    int* pmgshort;
+    int* Hmgsur;
+    int* Hmgshort;
+};
+
+
 class EMS {
 
 public:
     void MgOptimizationModel();
-    void solve();
+    void save_result();
+    resi solve();
     double obj;
 
     IloNumVarArray PGbuy;
@@ -79,8 +88,8 @@ private:
 
     void InitializeVariables() {
         // Initialize decision variables
-        PGbuy = IloNumVarArray(env_, T_, 0, IloInfinity);//Grid power bought
-        PGsell = IloNumVarArray(env_, T_, 0, IloInfinity);//Grid power sold
+        PGbuy = IloNumVarArray(env_, T_, 0, IloInfinity, ILOINT);//Grid power bought
+        PGsell = IloNumVarArray(env_, T_, 0, IloInfinity, ILOINT);//Grid power sold
         HGbuy = IloNumVarArray(env_, T_, 0, IloInfinity, ILOINT);//Grid Heat bought
         HGsell = IloNumVarArray(env_, T_, 0, IloInfinity, ILOINT);//Grid Heat sold
         statoc = IloNumVarArray(env_, T_, 0, 1); //battery storage capacity

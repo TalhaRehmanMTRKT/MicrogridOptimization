@@ -2,6 +2,8 @@
 
 
 
+
+
 void EMS::MgOptimizationModel() {
 
 #pragma region Objective Function
@@ -154,7 +156,11 @@ void EMS::MgOptimizationModel() {
 }
 
 
-void EMS::solve() {
+void EMS::save_result() {
+
+}
+
+resi EMS::solve() {
 
     MgOptimizationModel();
 
@@ -166,15 +172,35 @@ void EMS::solve() {
     obj = cplex.getObjValue();
     cout << "Solution status: " << cplex.getStatus() << endl;
     cout << "Minimized Objective Funtion : " << obj << endl;
+    
 
-    for (int i = 0; i < T_; i++)
+    int* pmgsur = new int[T_];
+    int* pmgshort = new int[T_];
+    int* Hmgsur = new int[T_];
+    int* Hmgshort = new int[T_];
+
+    for (int t = 0; t < T_; t++)
     {
-        cout<<cplex.getValue(PGsell[i]) << endl;
+        pmgsur[t] = cplex.getValue(PGsell[t]);
+        pmgshort[t] = cplex.getValue(PGbuy[t]);
+
+        Hmgsur[t] = cplex.getValue(HGsell[t]);
+        Hmgshort[t] = cplex.getValue(HGbuy[t]);
     }
 
 
+    resi results;
+    results.pmgsur = pmgsur;
+    results.pmgshort = pmgshort;
+    results.Hmgsur = Hmgsur;
+    results.Hmgshort = Hmgshort;
 
     IloNum eps = cplex.getParam(
         IloCplex::Param::MIP::Tolerances::Integrality);
 
+
+    return results;
+
 }
+
+
