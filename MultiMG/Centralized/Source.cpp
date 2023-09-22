@@ -27,41 +27,85 @@ main(int, char**)
     int** Cchp = new int* [NumMg];// add the randomly populating
     int** Cdg = new int* [NumMg];// add the randomly populating
     int** Chob = new int* [NumMg];// add the randomly populating
-    int** k_chp = new int* [NumMg]; // add the randomly populating
+    float** k_chp = new float* [NumMg]; // add the randomly populating
 
-
+    Cchp[0] = new int[NumCHP] {150, 145}; Cchp[1] = new int[NumCHP] { 150, 145 }; Cchp[2] = new int[NumCHP] { 150, 145 };
+    Cdg[0] = new int[NumDg] {135, 140}; Cdg[1] = new int[NumDg] { 135, 140 }; Cdg[2] = new int[NumDg] { 135, 140 };
+    Chob[0] = new int[NumHOB] {80}; Chob[1] = new int[NumHOB] {80}; Chob[2] = new int[NumHOB] {80};
+    k_chp[0] = new float[NumCHP] {1.2, 0.8}; k_chp[1] = new float[NumCHP] {1.2, 0.8}; k_chp[2] = new float[NumCHP] {1.2, 0.8};
 
 
     // Arrival and Departure time of Evs 
     int** ta = new int* [NumMg];  // add the randomly populating
     int** td = new int* [NumMg];  // add the randomly populating
     float** evsocini = new float* [NumMg];  // add the randomly populating
-    float* socini = new float[NumMg];  // add the randomly populating
+    float* socini = new float[NumMg] {0.2, 0.2, 0.2};  // add the randomly populating
     float** evcap = new float* [NumMg]; // add the randomly populating 
     float** eveffin = new float* [NumMg]; // add the randomly populating 
+    eveffin[0] = new float[NumEvs] { 0.90, 0.90, 0.90, 0.90, 0.90};
+    eveffin[1] = new float[NumEvs] { 0.90, 0.90, 0.90, 0.90, 0.90};
+    eveffin[2] = new float[NumEvs] { 0.90, 0.90, 0.90, 0.90, 0.90};
+
+
+    ta[0] = new int[NumEvs] {2, 4, 6, 9, 9};
+    ta[1] = new int[NumEvs] {2, 4, 6, 9, 9};
+    ta[2] = new int[NumEvs] {2, 4, 6, 9, 9};
+
+    td[0] = new int[NumEvs] {6, 7, 9, 12, 16};
+    td[1] = new int[NumEvs] {6, 7, 9, 12, 16};
+    td[2] = new int[NumEvs] {6, 7, 9, 12, 16};
+
+    evsocini[0] = new float[NumEvs] {0.30, 0.20, 0.10, 0.70, 0.40};
+    evsocini[1] = new float[NumEvs] {0.30, 0.20, 0.10, 0.70, 0.40};
+    evsocini[2] = new float[NumEvs] {0.30, 0.20, 0.10, 0.70, 0.40};
+
+    evcap[0] = new float[NumEvs] {38.3, 47.5, 28.9, 56, 52};
+    evcap[1] = new float[NumEvs] {38.3, 47.5, 28.9, 56, 52};
+    evcap[2] = new float[NumEvs] {38.3, 47.5, 28.9, 56, 52};
+
     
-    float* Heffin = new float[NumMg]; // add the randomly populating
-    float* effin = new float [NumMg]; // add the randomly populating
-    int* Hsscap = new int[NumMg] {}; // add the randomly populating 
-    int* Bsscap = new int[NumMg] {}; // add the randomly populating 
+    float* Heffin = new float[NumMg] {0.95, 0.95, 0.95}; // add the randomly populating
+    float* effin = new float [NumMg] {0.95, 0.95, 0.95}; // add the randomly populating
+
+
+
+    int* Hsscap = new int[NumMg] {50,50,50}; // add the randomly populating 
+    int* Bsscap = new int[NumMg] {150, 150, 150}; // add the randomly populating 
 
     int** dgcap = new int* [NumMg]; // add the randomly populating 
     int** chpcap = new int* [NumMg]; // add the randomly populating 
-    int** hobcap = new int* [NumMg]; // add the randomly populating 
+    int** hobcap = new int* [NumMg]; // add the randomly populating
+
+    dgcap[0] = new int[NumDg] {100, 80}; dgcap[1] = new int[NumDg] { 100, 80 }; dgcap[2] = new int[NumDg] {100, 80};
+    chpcap[0] = new int[NumCHP] {60, 100}; chpcap[1] = new int[NumCHP] { 60, 100}; chpcap[2] = new int[NumCHP] { 60, 100};
+    hobcap[0] = new int[NumHOB] {80}; hobcap[1] = new int[NumHOB] {80}; hobcap[2] = new int[NumHOB] {80};
 
 
     int** dgmin = new int* [NumMg]; // add the randomly populating 
     int** chpmin = new int* [NumMg]; // add the randomly populating 
     int** hobmin = new int* [NumMg]; // add the randomly populating 
 
+    dgmin[0] = new int[NumDg] {0, 0}; dgmin[1] = new int[NumDg] { 0, 0 }; dgmin[2] = new int[NumDg] {0, 0};
+    chpmin[0] = new int[NumCHP] {30, 50}; chpmin[1] = new int[NumCHP] { 30, 50}; chpmin[2] = new int[NumCHP] { 30, 50};
+    hobmin[0] = new int[NumHOB] {0}; hobmin[1] = new int[NumHOB] {0}; hobmin[2] = new int[NumHOB] {0};
+
     // Electric, Heat and Cooling Demand  // add the randomly populating 
     int** Pload = new int* [NumMg];  //Electicity demand w
     int** Hload = new int* [NumMg];  //Heat Demand
     int** Cload = new int* [NumMg];  //Cooling Demand
 
+    // Electric and Heat Demand 
+    Pload[0] = Pload[1] = Pload[2] = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
+    Hload[0] = Hload[1] = Hload[2] = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
+    Cload[0] = Cload[1] = Cload[2] = new int[T] {100, 100, 80, 100, 120, 135, 150, 135, 125, 130, 140, 150, 150, 130, 120, 110, 90, 80, 135, 150, 135, 140, 110, 125};  //Heat Demand
+
+
     // Renewable Infeeds  // Make the Scenario(Random) Generator for this
     float** Rdg = new float* [NumMg]; //Power generated by PV w.r.t time
 
+    Rdg[0] = new float[T] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10, 15, 20, 23, 28, 33, 35, 34, 31, 28, 10, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }; //Power generated by PV w.r.t time
+    Rdg[1] = new float[T] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10, 15, 20, 23, 28, 33, 35, 34, 31, 28, 10, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }; //Power generated by PV w.r.t time
+    Rdg[2] = new float[T] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10, 15, 20, 23, 28, 33, 35, 34, 31, 28, 10, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }; //Power generated by PV w.r.t time
 
 
     // Trading Prices Electric and Heat
@@ -193,7 +237,7 @@ main(int, char**)
         heathob[mg] = NumVar2D(env, NumHOB);
         for (int hob = 0; hob < NumHOB; hob++)
         {
-            powerchp[mg][hob] = IloNumVarArray(env, T, hobmin[mg][hob], hobcap[mg][hob]);
+            heathob[mg][hob] = IloNumVarArray(env, T, hobmin[mg][hob], hobcap[mg][hob]);
         }
 
 
@@ -265,9 +309,8 @@ main(int, char**)
 
             for (int hob = 0; hob < NumHOB; hob++)
             {
-                exp6 += Chob[mg][hob] * powerchp[mg][hob][t];
+                exp6 += Chob[mg][hob] * heathob[mg][hob][t];
             }
-
 
 
         }
