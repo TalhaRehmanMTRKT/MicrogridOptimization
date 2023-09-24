@@ -156,13 +156,10 @@ void EMS::MgOptimizationModel() {
 }
 
 
-void EMS::save_result() {
-
-}
-
 resi EMS::solve() {
 
     MgOptimizationModel();
+
 
     IloCplex cplex(env_);
     cplex.extract(model_);
@@ -198,9 +195,56 @@ resi EMS::solve() {
     IloNum eps = cplex.getParam(
         IloCplex::Param::MIP::Tolerances::Integrality);
 
+    saveResultsToFile(cplex);
+
 
     return results;
 
 }
+
+
+void EMS::saveResultsToFile(
+    IloCplex& cplex) {
+
+    // Create and open the CSV file for writing
+    ofstream outputFile(name_ + "_output.csv");
+
+    if (outputFile.is_open()) {
+        // Write the header row
+        outputFile << "Time,Pload+Pec,Hload+Hac,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,PGshort/sur,statoc,Bchg/dischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGshort/sur,Hchg/dischg";
+        for (int mg = 0; mg < numEvs_; mg++) {
+            outputFile << ",Pevchg/dischg" << mg + 1;
+        }
+
+        outputFile << std::endl;
+
+        // Write the data rows
+        for (int i = 0; i < T_; i++) {
+            outputFile << i + 1 << "," << Pload_[i] + cplex.getValue(Pec[i]) << "," << Hload_[i] + cplex.getValue(Hac[i]) << "," << Cload_[i] << "," << CGbuy_[i] << ","
+                << CGsell_[i] << "," << CHsell_[i] << ","
+                << CHbuy_[i] << "," << Rdg1_[i] << ","
+                << cplex.getValue(PGbuy[i]) - cplex.getValue(PGsell[i]) << ","
+                << cplex.getValue(statoc[i]) << "," << -cplex.getValue(Bchg[i]) + cplex.getValue(Bdischg[i]) << "," << cplex.getValue(Pdg1[i]) << ","
+                << cplex.getValue(Pdg2[i]) << ","
+                << cplex.getValue(Pchp1[i]) << "," << cplex.getValue(Pchp2[i]) << ","
+                << cplex.getValue(Hhob[i]) << "," << cplex.getValue(Hchp1[i]) << ","
+                << cplex.getValue(Hchp2[i]) << "," << cplex.getValue(HGbuy[i]) - cplex.getValue(HGsell[i]) << "," << -cplex.getValue(Hchg[i]) + cplex.getValue(Hdischg[i]);
+
+            for (int mg = 0; mg < numEvs_; mg++) {
+                outputFile << "," << -cplex.getValue(Pevchg[mg][i]) + cplex.getValue(Pevdischg[mg][i]);
+            }
+
+            outputFile << std::endl;
+        }
+
+        // Close the CSV file
+        outputFile.close();
+        std::cout << "Data saved to " << name_ << std::endl;
+    }
+    else {
+        std::cerr << "Failed to open the " << name_ << " file for writing." << std::endl;
+    }
+}
+
 
 

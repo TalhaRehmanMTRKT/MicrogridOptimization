@@ -90,7 +90,6 @@ resi mg2Result = mg2.solve();
 resi mg3Result = mg3.solve();
 
 
-
 int NumMg = 3;
 
 
@@ -266,17 +265,10 @@ for (int t = 0; t < T; t++)
 
     }
 
-    
-
-
 }
 
 
-
-
 #pragma endregion
-
-
 
 
 #pragma endregion
@@ -288,7 +280,6 @@ cplex.solve();
 double obj = cplex.getObjValue();
 cout << "Solution status: " << cplex.getStatus() << endl;
 cout << "Minimized Objective Funtion of " << obj << endl;
-
 
 
 

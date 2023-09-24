@@ -21,7 +21,7 @@ class EMS {
 
 public:
     void MgOptimizationModel();
-    void save_result();
+    void saveResultsToFile(IloCplex& cplex);
     resi solve();
     double obj;
 
