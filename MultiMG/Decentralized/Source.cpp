@@ -65,6 +65,7 @@ float* evcap = new float[numEvs] {38.3, 47.5, 28.9, 56, 52};
     
 // Electric and Heat Demand 
 int* Pload = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
+int* Pload2 = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 500, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
 int* Hload = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
 int* Cload = new int[T] {100, 100, 80, 100, 120, 135, 150, 135, 125, 130, 140, 150, 150, 130, 120, 110, 90, 80, 135, 150, 135, 140, 110, 125};  //Heat Demand
 
@@ -82,12 +83,13 @@ float* Rdg1 = new float[T] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10, 15, 20, 23, 2
 #pragma endregion
 
 
-EMS mg1("mg1" , T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
+EMS mg1("mg1" , T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload2, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
 EMS mg2("mg2" , T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
 EMS mg3("mg3" , T, numEvs, int_constant, float_constant, ta, td, evsocini, evcap, Pload, Hload, Cload, CGbuy, CGsell, CHbuy, CHsell, Rdg1);
 resi mg1Result = mg1.solve();
 resi mg2Result = mg2.solve();
 resi mg3Result = mg3.solve();
+
 
 
 int NumMg = 3;
@@ -194,37 +196,37 @@ IloExpr exp1(envcems);
 IloExpr exp2(envcems);
 IloExpr exp3(envcems);
 
-for (int k = 0; k < NumMg; k++)
-{
-    for (int l = 0; l < NumMg; l++)
-    {
 
-        if (k!=l){
-        
-            for (int t = 0; t < T; t++)
-            {
+for (int t = 0; t < T; t++)
+{
+    for (int k = 0; k < NumMg; k++)
+    {
+        for (int l = 0; l < NumMg; l++)
+        {
+
+            if (k != l) {
                 exp0 += powersend[k][l][t];
                 exp1 += powersrec[k][l][t];
                 exp2 += heatsend[k][l][t];
                 exp3 += heatrec[k][l][t];
+
+
             }
-        
-        }
-        else 
-        {   
-            for (int t = 0; t < T; t++)
+            else
             {
-                cmodel.add(powersend[k][l][t] == 0);
-                cmodel.add(powersrec[k][l][t] == 0);
-                cmodel.add(heatsend[k][l][t] == 0);
-                cmodel.add(heatrec[k][l][t] == 0);
+                    cmodel.add(powersend[k][l][t] == 0);
+                    cmodel.add(powersrec[k][l][t] == 0);
+                    cmodel.add(heatsend[k][l][t] == 0);
+                    cmodel.add(heatrec[k][l][t] == 0);
+
             }
         }
     }
+    cmodel.add(exp0 == exp1);
+    cmodel.add(exp2 == exp3);
 }
 
-cmodel.add(exp0 == exp1);
-cmodel.add(exp2 == exp3);
+
 
 
 
@@ -262,13 +264,21 @@ for (int t = 0; t < T; t++)
             cmodel.add(mgHrec == 0);
         }
 
-
     }
+
+
+
+    
+
 
 }
 
 
+
+
 #pragma endregion
+
+
 
 
 #pragma endregion
@@ -280,6 +290,43 @@ cplex.solve();
 double obj = cplex.getObjValue();
 cout << "Solution status: " << cplex.getStatus() << endl;
 cout << "Minimized Objective Funtion of " << obj << endl;
+
+
+
+
+
+// Create and open the CSV file for writing
+ofstream outputFile("global_output.csv");
+
+
+
+outputFile << "Mg1send/rec,Mg1short/sur,mg1buy/sell,Mg2send/rec,Mg2short/sur,mg2buy/sell,Mg3send/rec,Mg3short/sur,mg3buy/sell" << endl;
+
+
+for (int t = 0; t < T; t++)
+{
+
+
+    for (int mg = 0; mg < NumMg; mg++)
+    {
+        double ps = 0; double pr = 0;
+
+        for (int l = 0; l < NumMg; l++)
+        {
+            ps += cplex.getValue(powersend[mg][l][t]);
+            pr += cplex.getValue(powersrec[mg][l][t]);
+
+        }
+
+        outputFile << -ps + pr << ","<<+psur[mg][t] - pshort[mg][t]<<"," << cplex.getValue(powergridbuy[mg][t]) - cplex.getValue(powergridsell[mg][t]) << ",";
+
+    }
+
+    outputFile << endl;
+
+
+}
+
 
 
 

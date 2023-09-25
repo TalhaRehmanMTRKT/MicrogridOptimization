@@ -96,6 +96,7 @@ main(int, char**)
 
     // Electric and Heat Demand 
     Pload[0] = Pload[1] = Pload[2] = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
+    Pload[2] = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 400, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
     Hload[0] = Hload[1] = Hload[2] = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
     Cload[0] = Cload[1] = Cload[2] = new int[T] {100, 100, 80, 100, 120, 135, 150, 135, 125, 130, 140, 150, 150, 130, 120, 110, 90, 80, 135, 150, 135, 140, 110, 125};  //Heat Demand
 
@@ -467,11 +468,27 @@ main(int, char**)
             }
 
 
+            
+            
+            IloExpr  a(env);
+            IloExpr  b(env);
+            IloExpr  c(env);
+            IloExpr  d(env);
+
+            for (int l = 0; l < NumMg; l++)
+            {
+                a += powersend[mg][l][t];
+                b += powersrec[mg][l][t];
+                c += heatsend[mg][l][t];
+                d += heatrec[mg][l][t];
+            }
+
             // Adding the Electric power balance constraint
 
-            model.add(dgpsum - powerEC[mg][t] + Rdg[mg][t] + chpEsum + Bssdischg[mg][t] + powergridbuy[mg][t]  + exp1 - exp0 - Bsschg[mg][t]  - powergridsell[mg][t] == Pload[mg][t]);
 
-            model.add(hobsum - heatAC[mg][t] + chpHsum +heatgridbuy[mg][t] - heatgridsell[mg][t] - Hsschg[mg][t] + Hssdischg[mg][t] == Hload[mg][t]);
+            model.add(dgpsum - powerEC[mg][t] + Rdg[mg][t] + chpEsum + Bssdischg[mg][t]  + powergridbuy[mg][t]  -a+b + exp1 - exp0 - Bsschg[mg][t]  - powergridsell[mg][t] == Pload[mg][t]);
+
+            model.add(hobsum - heatAC[mg][t] + chpHsum +heatgridbuy[mg][t]- heatgridsell[mg][t] - Hsschg[mg][t] -c+d + Hssdischg[mg][t] == Hload[mg][t]);
 
             model.add(0.85 * heatAC[mg][t] + 0.95 * powerEC[mg][t] == Cload[mg][t]);
 
@@ -484,66 +501,41 @@ main(int, char**)
 
 
 
-
     IloExpr exp0(env);
     IloExpr exp1(env);
     IloExpr exp2(env);
     IloExpr exp3(env);
 
-    for (int k = 0; k < NumMg; k++)
-    {
-        for (int l = 0; l < NumMg; l++)
-        {
-
-            if (k != l) {
-
-                for (int t = 0; t < T; t++)
-                {
-                    exp0 += powersend[k][l][t];
-                    exp1 += powersrec[k][l][t];
-                    exp2 += heatsend[k][l][t];
-                    exp3 += heatrec[k][l][t];
-                }
-
-            }
-            else
-            {
-                for (int t = 0; t < T; t++)
-                {
-                    model.add(powersend[k][l][t] == 0);
-                    model.add(powersrec[k][l][t] == 0);
-                    model.add(heatsend[k][l][t] == 0);
-                    model.add(heatrec[k][l][t] == 0);
-                }
-            }
-        }
-    }
-    model.add(exp0 == exp1);
-    model.add(exp2 == exp3);
-
     for (int t = 0; t < T; t++)
     {
-
         for (int k = 0; k < NumMg; k++)
         {
-            IloExpr mgEsend(env);
-            IloExpr mgErec(env);
-            IloExpr mgHsend(env);
-            IloExpr mgHrec(env);
-
             for (int l = 0; l < NumMg; l++)
             {
-                mgEsend += powersend[k][l][t];
-                mgErec += powersrec[k][l][t];
-                mgHsend += heatsend[k][l][t];
-                mgHrec += heatrec[k][l][t];
+
+                if (k != l) {
+                        exp0 += powersend[k][l][t];
+                        exp1 += powersrec[k][l][t];
+                        exp2 += heatsend[k][l][t];
+                        exp3 += heatrec[k][l][t];
+                    
+
+                }
+                else
+                {
+
+                        model.add(powersend[k][l][t] == 0);
+                        model.add(powersrec[k][l][t] == 0);
+                        model.add(heatsend[k][l][t] == 0);
+                        model.add(heatrec[k][l][t] == 0);
+                }
             }
-            model.add(mgEsend + powergridsell[k][t] == psur[k][t]);
-            model.add(mgHsend + heatgridsell[k][t] == Hsur[k][t]);
-            model.add(mgErec + powergridbuy[k][t] == pshort[k][t]);
-            model.add(mgHrec + heatgridbuy[k][t] == Hshort[k][t]);
         }
+        model.add(exp0 == exp1);
+        model.add(exp2 == exp3);
     }
+
+
 
 #pragma endregion
 
@@ -558,6 +550,104 @@ main(int, char**)
     double obj = cplex.getObjValue();
     cout << "Solution status: " << cplex.getStatus() << endl;
     cout << "Minimized Objective Funtion of " << obj << endl;
+
+
+
+    for(int mg = 0; mg < NumMg; mg++)
+    {
+
+    // Create and open the CSV file for writing
+    ofstream outputFile(to_string(mg) + "_output.csv");
+
+    if (outputFile.is_open()) {
+
+        // Write the header row
+        outputFile << "Time,Pload+Pec,Hload+Hac,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg,PGshort/sur,statoc,Bchg/dischg,Pdg,Pchp,Hhob,Hchp,HGshort/sur,Hchg/dischg,MgSend/rec";
+        for (int ev = 0; ev < NumEvs; ev++) {
+            outputFile << ",Pevchg/dischg" << ev + 1;
+        }
+
+        outputFile << std::endl;
+
+
+
+        // Write the data rows
+        for (int i = 0; i < T; i++) {
+
+
+            double dg_power = 0;
+
+            for (int dg = 0; dg < NumDg; dg++)
+            {
+                dg_power += cplex.getValue(powerdg[mg][dg][i]);
+
+            }
+
+
+            double chp_power = 0;
+            double chp_heat = 0; 
+            for (int chp = 0; chp < NumCHP; chp++)
+            {
+                chp_power += cplex.getValue(powerchp[mg][chp][i]);
+                chp_heat += cplex.getValue(heatchp[mg][chp][i]);
+
+            }
+
+            double hob_power = 0;
+
+            for (int hob = 0; hob < NumHOB; hob++)
+            {
+                hob_power += cplex.getValue(heathob[mg][hob][i]);
+
+            }
+            double ps=0; double pr = 0;
+
+
+
+            for (int l = 0; l < NumMg; l++)
+            {
+                ps += cplex.getValue(powersend[mg][l][i]);
+                pr += cplex.getValue(powersrec[mg][l][i]);
+               
+            }
+
+            outputFile << i + 1 << "," << Pload[mg][i] + cplex.getValue(powerEC[mg][i]) << "," << Hload[mg][i] + cplex.getValue(heatAC[mg][i]) << "," << Cload[mg][i] << "," << CGbuy[i] << ","
+                << CGsell[i] << "," << CHsell[i] << ","
+                << CHbuy[i] << "," << Rdg[mg][i] << ","
+                << cplex.getValue(powergridbuy[mg][i]) - cplex.getValue(powergridsell[mg][i]) << ","
+                << cplex.getValue(BssSOC[mg][i]) << "," << -cplex.getValue(Bsschg[mg][i]) + cplex.getValue(Bssdischg[mg][i]) << "," << dg_power<< ","
+                << chp_power << ","
+                << hob_power << "," << chp_heat << "," << cplex.getValue(heatgridbuy[mg][i]) - cplex.getValue(heatgridsell[mg][i]) << "," << -cplex.getValue(Hsschg[mg][i]) + cplex.getValue(Hssdischg[mg][i]) << "," << -ps + pr;
+
+            for (int ev = 0; ev < NumEvs; ev++) {
+                outputFile << "," << -cplex.getValue(evchg[mg][ev][i]) + cplex.getValue(evdischg[mg][ev][i]);
+            }
+
+            outputFile << std::endl;
+        }
+
+        // Close the CSV file
+        outputFile.close();
+        std::cout << "Data saved to " << mg << std::endl;
+    }
+    else {
+        std::cerr << "Failed to open the " << mg << " file for writing." << std::endl;
+    }
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
 
     return 1;
 

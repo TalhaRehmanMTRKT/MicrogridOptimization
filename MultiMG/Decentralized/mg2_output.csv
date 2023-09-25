@@ -1,4 +1,4 @@
-Time,Pload+Pec,Hload+Hac,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,PGbuy/sell,statoc,Bchg/dischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGbuy/sell,Hchg/dischg,Pevchg/dischg1,Pevchg/dischg2,Pevchg/dischg3,Pevchg/dischg4,Pevchg/dischg5
+Time,Pload+Pec,Hload+Hac,Cload,CGbuy,CGsell,CHsell,CHbuy,Rdg1,PGshort/sur,statoc,Bchg/dischg,Pdg1,Pdg2,Pchp1,Pchp2,Hhob,Hchp1,Hchp2,HGshort/sur,Hchg/dischg,Pevchg/dischg1,Pevchg/dischg2,Pevchg/dischg3,Pevchg/dischg4,Pevchg/dischg5
 1,169.579,247,100,138,128,75,77,0,0,0.462333,-41.4211,51,0,60,100,0,72,80,95,0,0,0,0,0,0
 2,175.579,242,100,139,129,75,77,0,0,0.997,-84.4211,100,0,60,100,0,72,80,90,0,0,0,0,0,0
 3,179.105,214,80,143,133,75,77,0,0,0.997333,-0.0526218,28,0,60,100,0,72,80,62,0,-8.84212,0,0,0,0
