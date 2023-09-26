@@ -90,15 +90,33 @@ main(int, char**)
     hobmin[0] = new int[NumHOB] {0}; hobmin[1] = new int[NumHOB] {0}; hobmin[2] = new int[NumHOB] {0};
 
     // Electric, Heat and Cooling Demand  // add the randomly populating 
-    int** Pload = new int* [NumMg];  //Electicity demand w
-    int** Hload = new int* [NumMg];  //Heat Demand
-    int** Cload = new int* [NumMg];  //Cooling Demand
-
     // Electric and Heat Demand 
-    Pload[0] = Pload[1] = Pload[2] = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
-    Pload[2] = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 400, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
-    Hload[0] = Hload[1] = Hload[2] = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
-    Cload[0] = Cload[1] = Cload[2] = new int[T] {100, 100, 80, 100, 120, 135, 150, 135, 125, 130, 140, 150, 150, 130, 120, 110, 90, 80, 135, 150, 135, 140, 110, 125};  //Heat Demand
+    int* Pload_arr = new int[T] {169, 175, 179, 171, 181, 190, 270, 264, 273, 281, 300, 320, 280, 260, 250, 200, 180, 190, 240, 280, 325, 350, 300, 250};  //Electicity demand w.r.t tim
+    int* Hload_arr = new int[T] {130, 125, 120, 120, 125, 135, 150, 160, 175, 190, 195, 200, 195, 195, 180, 170, 185, 190, 195, 200, 195, 190, 180, 175};  //Heat Demand
+    int* Cload_arr = new int[T] {100, 100, 80, 100, 120, 135, 150, 135, 125, 130, 140, 150, 150, 130, 120, 110, 90, 80, 135, 150, 135, 140, 110, 125};  //Heat Demand
+
+
+    // Electric, Heat and Cooling Demand  // add the randomly populating 
+    int** Pload = new int* [3];  //Electicity demand w
+    int** Hload = new int* [3];  //Heat Demand
+    int** Cload = new int* [3];  //Cooling Demand
+
+    float* scaling = new float[3] {1, 0.5, 2};
+
+    for (int i = 0; i < 3; i++)
+    {
+        Pload[i] = new int[T];
+        Hload[i] = new int[T];
+        Cload[i] = new int[T];
+
+        for (int t = 0; t < T; t++)
+        {
+            Pload[i][t] = static_cast<int>(Pload_arr[t] * scaling[i]);
+            Hload[i][t] = static_cast<int>(Hload_arr[t] * scaling[i]);
+            Cload[i][t] = static_cast<int>(Cload_arr[t] * 1);
+        }
+
+    }
 
 
     // Renewable Infeeds  // Make the Scenario(Random) Generator for this
@@ -114,7 +132,13 @@ main(int, char**)
     int* CGsell = new int[T] { 128, 129, 133, 139, 140, 142, 145, 148, 150, 144, 143, 143, 142, 140, 139, 139, 144, 146, 153, 154, 154, 150, 140, 138}; //selling price of electricity
     int* CHbuy = new int[T] {77, 77, 77, 77, 77, 77, 77, 77, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 78, 78, 78, 78, 78, 78}; // buying price of heat
     int* CHsell = new int[T] {75, 75, 75, 75, 75, 75, 75, 75, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 78, 78, 78, 78, 78, 78 }; // selling price of heat
-
+    
+    // Scale the prices by a factor of 1.8
+    const double scalingFactor = 1.8;
+    for (int i = 0; i < T; ++i) {
+        CHbuy[i] = static_cast<int>(CHbuy[i] * scalingFactor);
+        CHsell[i] = static_cast<int>(CHsell[i] * scalingFactor);
+    }
 
 #pragma endregion
 
@@ -558,6 +582,7 @@ main(int, char**)
 
     // Create and open the CSV file for writing
     ofstream outputFile(to_string(mg) + "_output.csv");
+    // Create and open the CSV file for writing
 
     if (outputFile.is_open()) {
 
@@ -619,12 +644,17 @@ main(int, char**)
                 << chp_power << ","
                 << hob_power << "," << chp_heat << "," << cplex.getValue(heatgridbuy[mg][i]) - cplex.getValue(heatgridsell[mg][i]) << "," << -cplex.getValue(Hsschg[mg][i]) + cplex.getValue(Hssdischg[mg][i]) << "," << -ps + pr;
 
+
             for (int ev = 0; ev < NumEvs; ev++) {
                 outputFile << "," << -cplex.getValue(evchg[mg][ev][i]) + cplex.getValue(evdischg[mg][ev][i]);
             }
 
             outputFile << std::endl;
+
+
+
         }
+
 
         // Close the CSV file
         outputFile.close();
@@ -637,6 +667,42 @@ main(int, char**)
 
 
 
+
+
+
+    }
+
+    ofstream outFile("All_output.csv");
+
+
+
+    if (outFile.is_open()) {
+
+        outFile << "Mg1Send/rec" << "," << "mg1buy_sell" << "," << "Mg2Send/rec" << "," << "mg2buy_sell" << "," << "Mg3Send/rec"  << "," << "mg3buy_sell" << endl;
+
+        for (int t = 0; t < T; t++)
+        {
+
+            double gridtrade=0;
+            for (int mg = 0; mg < NumMg; mg++)
+            {
+                double gridtrade = 0;
+
+                double ps = 0; double pr = 0;
+                for (int l = 0; l < NumMg; l++)
+                {
+                    ps += cplex.getValue(powersend[mg][l][t]);
+                    pr += cplex.getValue(powersrec[mg][l][t]);
+                }
+
+                gridtrade = cplex.getValue(powergridbuy[mg][t]) - cplex.getValue(powergridsell[mg][t]);
+
+                outFile << -ps+pr << ","<< gridtrade<<",";
+            }
+
+
+            outFile<< endl;
+        }
 
 
     }
