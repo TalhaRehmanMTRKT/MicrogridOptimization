@@ -1,0 +1,25 @@
+﻿  Source.cpp
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(63,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(63,43): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(63,48): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(63,53): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(63,58): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(64,35): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(64,47): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\utility(242,54): warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Ty2=float
+          ]
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(51,9): message : see reference to function template instantiation 'std::pair<const std::string,float>::pair<const char(&)[7],double,0>(_Other1,_Other2 &&) noexcept(false)' being compiled
+          with
+          [
+              _Other1=const char (&)[7],
+              _Other2=double
+          ]
+D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\Source.cpp(50,42): message : see the first reference to 'std::pair<const std::string,float>::pair' in 'main'
+  decentralizedMG.vcxproj -> D:\MasterWork\Codes\MicrogridOptimization\MultiMG\Decentralized\x64\Debug\Decentralized.exe
