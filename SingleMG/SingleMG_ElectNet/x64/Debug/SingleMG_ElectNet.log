@@ -1,0 +1,4 @@
+﻿  Source.cpp
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG\SingleMG_ElectNet\Source.cpp(33,14): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\MasterWork\Codes\MicrogridOptimization\SingleMG\SingleMG_ElectNet\Source.cpp(35,13): warning C4305: 'initializing': truncation from 'double' to 'float'
+  SingleMG_ElectNet.vcxproj -> D:\MasterWork\Codes\MicrogridOptimization\SingleMG\SingleMG_ElectNet\x64\Debug\SingleMG.exe
