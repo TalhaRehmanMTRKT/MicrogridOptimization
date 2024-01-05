@@ -1,0 +1,17 @@
+numDays: 1
+numSimulations: 1000
+socmax: 0.9
+socmin: 0.1
+v: 1
+numEvs: 20
+meanArrival: 8.5
+stdDevArrival: 3.3
+meanDeparture: 17.5
+stdDevDeparture: 3.24
+meanDailyDistance: log/orig 3.44725 , 34.1
+stdDevDailyDistance: log/orig 0.405087 , 14.4
+meanDistanceNeigbour: log/orig 2.81351 , 17.59
+stdDevdistanceNeigbour: log/orig 0.328093 , 5.93
+EVs specifications:
+EVs Bat Capacity: 54, 74, 28.9, 57.5, 74, 91, 28.5, 58, 45, 83.7, 39, 39.2, 78, 25, 50.8, 90.6, 85, 46.3, 74, 21.3, 
+EVs Range : 360, 370, 180, 380, 385, 425, 170, 350, 235, 400, 235, 230, 410, 165, 300, 525, 405, 210, 350, 130, 
