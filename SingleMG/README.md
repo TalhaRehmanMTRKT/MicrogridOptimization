@@ -1,5 +1,5 @@
 # MicrogridOptimization
-<img src="./graphics/SingleMG.PNG" />
+<img src="../graphics/SingleMG.PNG" />
 
 
 
